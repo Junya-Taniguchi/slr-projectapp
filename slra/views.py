@@ -1,18 +1,22 @@
 from django.http import HttpResponse
 from django.shortcuts import render
+from .models import Slra
 import numpy as np
 import pandas as pd
 import csv
 import math
 
 def home(request):
-    return render(request, 'home.html')
+    slra = Slra.objects.all()
+    return render(request, 'home.html',{'slras':slra})
 
 def ask(request):
+    data = Slra.objects.get(id=1,upload__contains='csv')
+    csv = data.upload
     roomsize = request.GET['roomsize']
     roomsize = int(roomsize)
     # 学習モデル
-    df = pd.read_csv('sample.csv')
+    df = pd.read_csv(csv)
     xa = df['x']
     yb = df['y']
     # データフレームの平均を取得
